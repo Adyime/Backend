@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: "contact.adyime@gmail.com",
-    pass: "kvtf edrg blji xplb", // Update this with your actual Gmail app password
+    pass: "kvtf edrg blji xplb",
   },
 });
 
@@ -43,6 +43,36 @@ app.post("/send-email", (req, res) => {
       return res.status(500).send("Error sending email");
     }
     return res.status(200).send("Email sent successfully");
+  });
+});
+
+// Ebook request form endpoint
+app.post("/send-ebook-email", (req, res) => {
+  const { email } = req.body;
+
+  const mailOptions = {
+    from: "contact.adyime@gmail.com",
+    to: email,
+    subject: "Your Free Ebook: How to Skyrocket Your Sales",
+    text: `
+      Thank you for subscribing! Here is your free ebook on "How to Skyrocket Your Sales". 
+      You can download the attachment:
+    `,
+    attachments: [
+      {
+        filename: "How_to_Skyrocket_Your_Sales.pdf",
+        path: "./Ebook.pdf", // Make sure this path is correct relative to your server's root folder
+      },
+    ],
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error(error);
+      return res.status(500).send("Error sending email");
+    }
+    console.log("Ebook sent: " + info.response);
+    return res.status(200).send("Ebook sent successfully");
   });
 });
 
